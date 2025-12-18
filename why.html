@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why CreateNex | Premier Tech Choice</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- FAVICON -->
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
+
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --accent-cyan: #22d3ee;
+      --accent-blue: #3b82f6;
+      --text-dim: #9ca3af;
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: #fff;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* --- BACKGROUND GLOW --- */
+    .bg-glow {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+                  radial-gradient(circle at 20% 80%, rgba(34, 211, 238, 0.1) 0%, transparent 40%);
+      z-index: -1;
+    }
+
+    /* --- NAVBAR --- */
+    .navbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 8%;
+      backdrop-filter: blur(15px);
+      background: rgba(3, 7, 18, 0.7);
+      border-bottom: 1px solid var(--glass-border);
+      position: fixed; width: 100%; top: 0; z-index: 1000;
+    }
+
+    .logo img { height: 80px; }
+
+    .nav-links ul { list-style: none; display: flex; gap: 30px; }
+
+    .nav-links a {
+      text-decoration: none; color: var(--text-dim);
+      font-size: 13px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1.5px; transition: 0.3s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--accent-cyan);
+    }
+
+    /* --- MOBILE MENU BUTTON --- */
+    #menu-toggle { display: none; }
+
+    .menu-btn {
+      display: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #fff;
+      transition: 0.3s;
+    }
+
+    .menu-btn:hover {
+      color: var(--accent-cyan);
+    }
+
+    /* --- SIDE DRAWER --- */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s ease;
+      z-index: 998;
+    }
+
+    #menu-toggle:checked ~ .drawer-overlay {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer-overlay-label {
+      position: fixed;
+      inset: 0;
+      cursor: pointer;
+    }
+
+    .side-drawer {
+      position: fixed;
+      top: 0; left: 0;
+      width: 260px; height: 100vh;
+      background: rgba(15,23,42,0.88);
+      backdrop-filter: blur(18px);
+      border-right: 1px solid var(--glass-border);
+      transform: translateX(-100%);
+      transition: 0.35s ease;
+      z-index: 999;
+      padding: 80px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    #menu-toggle:checked ~ .side-drawer {
+      transform: translateX(0);
+    }
+
+    .side-drawer a {
+      text-decoration: none;
+      color: var(--text-dim);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      transition: 0.3s;
+    }
+
+    .side-drawer a:hover {
+      color: var(--accent-cyan);
+      transform: translateX(5px);
+    }
+
+    /* --- WHY SECTION --- */
+    .why-section {
+      padding: 160px 10% 100px;
+      text-align: center;
+    }
+
+    .why-section h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      margin-bottom: 60px;
+      background: linear-gradient(to right, #ffffff, var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .feature-box {
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      padding: 60px 40px;
+      border-radius: 24px;
+      border: 1px solid var(--glass-border);
+      transition: 0.6s;
+    }
+
+    .feature-box:hover {
+      transform: translateY(-15px) rotateX(5deg);
+      border-color: var(--accent-cyan);
+      background: rgba(34, 211, 238, 0.05);
+    }
+
+    .feature-box img {
+      height: 80px;
+      margin-bottom: 30px;
+      filter: invert(72%) sepia(85%) saturate(1458%) hue-rotate(152deg);
+      transition: 0.5s;
+    }
+
+    .feature-box:hover img {
+      transform: scale(1.1);
+    }
+
+    .feature-box h3 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    .feature-box p {
+      font-size: 16px;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 968px) {
+      .nav-links { display: none; }
+      .menu-btn { display: block; }
+      .why-section { padding: 130px 6% 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-glow"></div>
+
+  <!-- CHECKBOX FOR DRAWER -->
+  <input type="checkbox" id="menu-toggle">
+
+  <!-- OVERLAY -->
+  <div class="drawer-overlay">
+    <label for="menu-toggle" class="drawer-overlay-label"></label>
+  </div>
+
+  <!-- SIDE DRAWER -->
+  <nav class="side-drawer">
+    <a href="main1.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="why.html" class="active">Why Us</a>
+    <a href="service1.html">Services</a>
+    <a href="clients.html">Clients</a>
+    <a href="contact1.html">Contact</a>
+  </nav>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="logo">
+      <img src="logo.png" alt="Createnex Logo" />
+    </div>
+
+    <nav class="nav-links">
+      <ul>
+        <li><a href="main1.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="why.html" class="active">Why Us</a></li>
+        <li><a href="service1.html">Services</a></li>
+        <li><a href="clients.html">Clients</a></li>
+        <li><a href="contact1.html">Contact</a></li>
+      </ul>
+    </nav>
+
+    <label for="menu-toggle" class="menu-btn">☰</label>
+  </header>
+
+  <!-- WHY SECTION -->
+  <section class="why-section">
+    <h1>Why CreateNex?</h1>
+
+    <div class="features">
+      <div class="feature-box">
+        <img src="logo5.png" alt="Innovative" />
+        <h3>Innovative</h3>
+        <p>Designed to innovate. Built to scale.</p>
+      </div>
+
+      <div class="feature-box">
+        <img src="logo6.png" alt="Unmatched Support" />
+        <h3>Unmatched Support</h3>
+        <p>Virtual assistance. Talk to us about any concerns, 24/7.</p>
+      </div>
+
+      <div class="feature-box">
+        <img src="logo7.png" alt="Ecosystem-Friendly" />
+        <h3>Ecosystem-Friendly</h3>
+        <p>Easy peasy UI. Our interface is simple and easy to use.</p>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

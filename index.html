@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Createnex | Tech Solutions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- FAVICON -->
+  <link rel="icon" type="image/png" href="logo.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --accent-cyan: #22d3ee;
+      --accent-blue: #3b82f6;
+      --accent-purple: #818cf8;
+      --text-dim: #9ca3af;
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+    }
+
+    /* --- GLOBAL --- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg-dark); color: #fff; overflow-x: hidden; }
+
+    /* --- CSS-ONLY LOADER --- */
+    #loader-wrapper {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: var(--bg-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      animation: fadeOutLoader 0.8s forwards;
+      animation-delay: 1.2s; 
+      pointer-events: none;
+    }
+    @keyframes fadeOutLoader {
+      from { opacity: 1; visibility: visible; }
+      to { opacity: 0; visibility: hidden; }
+    }
+    .loader-text {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      background: linear-gradient(to right, #fff, var(--accent-cyan), var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: pulseText 2s infinite ease-in-out;
+    }
+    @keyframes pulseText {
+      0%, 100% { opacity: 0.3; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+
+    /* --- BACKGROUND GLOW --- */
+    .bg-glow {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(34, 211, 238, 0.1) 0%, transparent 40%);
+      z-index: -1;
+    }
+
+    /* --- SCROLL REVEAL (CSS ONLY) --- */
+    @keyframes reveal-animation {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      view-timeline-name: --revealing;
+      view-timeline-axis: block;
+      animation: reveal-animation linear both;
+      animation-timeline: --revealing;
+      animation-range: entry 10% cover 35%;
+    }
+
+    @supports not (animation-timeline: view()) {
+      .reveal { opacity: 1; transform: none; }
+    }
+
+    /* --- NAVBAR --- */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 8%;
+      backdrop-filter: blur(15px);
+      background: rgba(3, 7, 18, 0.7);
+      border-bottom: 1px solid var(--glass-border);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo img { height: 80px; }
+
+    .nav-links ul {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-dim);
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      transition: 0.3s;
+      position: relative;
+      padding-bottom: 5px;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-cyan);
+    }
+
+    /* --- HAMBURGER (CSS ONLY, TEXT ICON) --- */
+    #menu-toggle {
+      display: none;
+    }
+
+    .menu-btn {
+      display: none;
+      font-size: 26px;
+      cursor: pointer;
+      color: #ffffff;
+      user-select: none;
+      line-height: 1;
+    }
+
+    .menu-btn:hover {
+      color: var(--accent-cyan);
+    }
+
+    /* --- SIDE DRAWER & OVERLAY (CSS-ONLY, CHECKBOX HACK) --- */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      z-index: 998;
+    }
+
+    .side-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 260px;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(18px);
+      border-right: 1px solid var(--glass-border);
+      transform: translateX(-100%);
+      transition: transform 0.35s ease;
+      z-index: 999;
+      padding: 80px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .side-drawer a {
+      text-decoration: none;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1.6px;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .side-drawer a:last-child {
+      border-bottom: none;
+    }
+
+    .side-drawer a:hover {
+      color: var(--accent-cyan);
+      transform: translateX(4px);
+    }
+
+    /* Checkbox controls overlay & drawer */
+    #menu-toggle:checked ~ .drawer-overlay {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    #menu-toggle:checked ~ .side-drawer {
+      transform: translateX(0);
+    }
+
+    /* Make overlay clickable to close (label for checkbox) */
+    .drawer-overlay-label {
+      position: fixed;
+      inset: 0;
+      cursor: pointer;
+    }
+
+    /* --- COMMON SECTION STYLES --- */
+    section {
+      min-height: 100vh;
+      padding: 140px 10% 80px;
+      overflow: hidden;
+    }
+
+    .section-label {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .section-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 30px;
+      background: linear-gradient(to right, #ffffff, var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* --- HOME --- */
+    #home {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 60px;
+    }
+
+    .hero-content { flex: 1.2; }
+
+    .tagline-container {
+      border-left: 2px solid var(--accent-cyan);
+      padding-left: 25px;
+      margin-bottom: 50px;
+    }
+
+    .tagline {
+      font-size: 1.2rem;
+      color: #d1d5db;
+      line-height: 1.6;
+      max-width: 550px;
+    }
+
+    .btn-wrap {
+      display: inline-block;
+      padding: 2px;
+      background: linear-gradient(45deg, var(--accent-blue), var(--accent-cyan));
+      border-radius: 8px;
+    }
+
+    .btn-main {
+      padding: 16px 40px;
+      background: var(--bg-dark);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      display: block;
+      font-weight: 700;
+      transition: 0.3s;
+    }
+
+    .btn-main:hover {
+      background: transparent;
+      color: #fff;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-20px); }
+    }
+
+    .hero-visual img {
+      width: 100%;
+      max-width: 500px;
+      animation: float 6s ease-in-out infinite;
+      filter: drop-shadow(0 0 40px rgba(59, 130, 246, 0.2));
+    }
+
+    /* --- ABOUT --- */
+    #about {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .about-text h2 {
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--accent-purple);
+      margin-bottom: 25px;
+    }
+
+    .about-text p {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+    }
+
+    .about-image img {
+      width: 100%;
+      border-radius: 24px;
+      border: 1px solid var(--glass-border);
+    }
+
+    /* --- WHY US --- */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .feature-box {
+      background: var(--glass);
+      padding: 60px 40px;
+      border-radius: 24px;
+      border: 1px solid var(--glass-border);
+      text-align: center;
+      transition: 0.5s;
+    }
+
+    .feature-box:hover {
+      transform: translateY(-15px) rotateX(5deg);
+      border-color: var(--accent-cyan);
+      background: rgba(34, 211, 238, 0.05);
+    }
+
+    .feature-box img {
+      height: 80px;
+      margin-bottom: 30px;
+      filter: invert(72%) sepia(85%) saturate(1458%) hue-rotate(152deg);
+    }
+
+    /* --- SERVICES --- */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .service-box {
+      background: var(--glass);
+      padding: 40px 25px;
+      border-radius: 24px;
+      border: 1px solid var(--glass-border);
+      transition: 0.5s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .service-box:hover {
+      transform: translateY(-15px) rotateX(4deg) rotateY(-4deg);
+      border-color: var(--accent-cyan);
+      background: rgba(34, 211, 238, 0.05);
+    }
+
+    .service-box img {
+      height: 60px;
+      margin-bottom: 25px;
+      transition: 0.8s;
+    }
+
+    .service-box:hover img {
+      transform: scale(1.1) rotate(360deg);
+    }
+
+    .service-box ul {
+      list-style: none;
+      text-align: left;
+      font-size: 14px;
+      color: var(--text-dim);
+      margin-top: 15px;
+    }
+
+    .service-box li {
+      margin-bottom: 10px;
+      display: flex;
+      gap: 10px;
+      transition: 0.3s;
+    }
+
+    .service-box li::before {
+      content: "•";
+      color: var(--accent-cyan);
+    }
+
+    .service-box:hover li {
+      transform: translateX(5px);
+      color: #fff;
+    }
+
+    /* --- CLIENTS --- */
+    .clients-intro {
+      font-size: 17px;
+      color: var(--text-dim);
+      max-width: 800px;
+      margin: 0 auto 60px;
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    .client-row {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .client-row img {
+      width: 100%;
+      max-width: 1000px;
+      border-radius: 24px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      padding: 30px;
+      transition: 0.5s;
+    }
+
+    .client-row img:hover {
+      border-color: var(--accent-cyan);
+      transform: scale(1.02);
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 1024px) {
+      section {
+        padding: 120px 7% 70px;
+      }
+
+      #home {
+        gap: 40px;
+      }
+
+      .hero-visual img {
+        max-width: 420px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none;
+      }
+
+      .menu-btn {
+        display: block;
+      }
+
+      section {
+        padding: 110px 6% 60px;
+      }
+
+      #home {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .tagline-container {
+        border-left: none;
+        border-top: 2px solid var(--accent-cyan);
+        padding-left: 0;
+        padding-top: 18px;
+        margin-bottom: 35px;
+      }
+
+      .tagline {
+        margin: 0 auto;
+      }
+
+      .hero-content {
+        order: 1;
+      }
+
+      .hero-visual {
+        order: 2;
+        display: flex;
+        justify-content: center;
+      }
+
+      .hero-visual img {
+        max-width: 360px;
+      }
+
+      #about {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .about-text {
+        text-align: left;
+      }
+
+      .clients-intro {
+        font-size: 15px;
+        padding: 0 4%;
+      }
+
+      .client-row img {
+        padding: 18px;
+        border-radius: 18px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .logo img {
+        height: 60px;
+      }
+
+      .section-title {
+        font-size: 2.1rem;
+      }
+
+      .about-text p {
+        font-size: 14px;
+      }
+
+      .feature-box,
+      .service-box {
+        padding: 32px 22px;
+      }
+
+      .clients-intro {
+        font-size: 14px;
+      }
+
+      .client-row img {
+        padding: 14px;
+      }
+
+      .btn-main {
+        padding: 14px 32px;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .section-title {
+        font-size: 1.9rem;
+      }
+
+      .tagline {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loader-wrapper">
+    <div class="loader-text">Loading Createnex</div>
+  </div>
+
+  <div class="bg-glow"></div>
+
+  <!-- CHECKBOX FOR CSS-ONLY DRAWER -->
+  <input type="checkbox" id="menu-toggle">
+
+  <!-- OVERLAY (LABEL TO CLOSE WHEN CLICKED) -->
+  <div class="drawer-overlay">
+    <label for="menu-toggle" class="drawer-overlay-label"></label>
+  </div>
+
+  <!-- SIDE DRAWER (LEFT → RIGHT) -->
+  <nav class="side-drawer">
+    <a href="main1.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="why.html">Why Us</a>
+    <a href="service1.html">Services</a>
+    <a href="client.html">Clients</a>
+    <a href="contact1.html">Contact</a>
+  </nav>
+
+  <header class="navbar">
+    <div class="logo"><img src="logo.png" alt="CreatNex Logo"></div>
+
+    <nav class="nav-links">
+      <ul>
+        <li><a href="main1.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="why.html">Why Us</a></li>
+        <li><a href="service1.html">Services</a></li>
+        <li><a href="client.html">Clients</a></li>
+        <li><a href="contact1.html">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- HAMBURGER BUTTON (LABEL FOR CHECKBOX) -->
+    <label for="menu-toggle" class="menu-btn">☰</label>
+  </header>
+
+  <section id="home">
+    <div class="hero-content reveal">
+      <h1 class="section-title">Leave the <br> tech to us.</h1>
+      <div class="tagline-container">
+        <p class="tagline"><b>Smart solutions</b>, <b>seamless execution</b>, and technology that works for you — not the other way around.</p>
+      </div>
+      <div class="btn-wrap"><a href="#about" class="btn-main">LEARN MORE</a></div>
+    </div>
+    <div class="hero-visual reveal">
+      <img src="logo0.png" alt="Hero Illustration">
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="about-text reveal">
+      <span class="section-label">Our Vision</span>
+      <h1 class="section-title">INNOVATION <br>YOU CAN TRUST.</h1>
+      <h2>Driven to create. Designed to secure. Built to empower.</h2>
+      <p>
+        At CreateNex, we believe technology should not only solve problems, it should strengthen people. Guided by our core values Create, Awareness, Secure, Empower, we build intelligent software solutions that simplify operations, enhance digital safety, and unlock new possibilities for growth.
+      </p>
+      <p>
+        Our mission is to bridge the gap between innovation and real-world challenges by designing systems that are smart, reliable, and secure. Whether we are developing custom applications, creating cyber-awareness tools, or empowering businesses with AI-driven solutions, we are committed to shaping a safer and more efficient digital future for everyone we serve.
+      </p>
+    </div>
+    <div class="about-image reveal">
+      <img src="About-us-page-image.jpg" alt="About us">
+    </div>
+  </section>
+
+  <section id="why">
+    <div style="text-align: center;">
+      <h1 class="section-title reveal">Why CreateNex?</h1>
+      <div class="features-grid">
+        <div class="feature-box reveal">
+          <img src="logo5.png" alt="">
+          <h3>Wide Network</h3>
+          <p>No matter where you are, we've got you covered.</p>
+        </div>
+        <div class="feature-box reveal">
+          <img src="logo6.png" alt="">
+          <h3>Unmatched Support</h3>
+          <p>Virtual assistance. Talk to us about any concerns, 24/7.</p>
+        </div>
+        <div class="feature-box reveal">
+          <img src="logo7.png" alt="">
+          <h3>Beginner-Friendly</h3>
+          <p>Easy peasy UI. Our interface is simple and easy to use.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div style="text-align: center;">
+      <h1 class="section-title reveal">Our Tech Solutions</h1>
+      <div class="services-grid">
+        <div class="service-box reveal">
+          <img src="logo1.png" alt="">
+          <h3>Software Devlopment</h3>
+          <ul>
+            <li>Web Applications Development</li>
+            <li>Mobile App Development (Android / iOS)</li>
+            <li>Desktop Software Solutions</li>
+            <li>Enterprise Software & Workflow automation</li>
+            <li>API Development & System integrations</li>
+          </ul>
+        </div>
+        <div class="service-box reveal">
+          <img src="logo2.png" alt="">
+          <h3>AI & Automation Solutions</h3>
+          <ul>
+            <li>AI-powered chatbots</li>
+            <li>Intelligent automation for business workflows</li>
+            <li>Predictive analytics dashboards</li>
+            <li>AI-based security monitoring</li>
+            <li>Document scanning & OCR solutions</li>
+            <li>Custom LLM-based tools</li>
+          </ul>
+        </div>
+        <div class="service-box reveal">
+          <img src="logo3.png" alt="">
+          <h3>IT Consulting & Support</h3>
+          <ul>
+            <li>Software project consultation</li>
+            <li>System architecture design</li>
+            <li>Maintenance & technical support</li>
+            <li>IT infrastructure setup</li>
+          </ul>
+        </div>
+        <div class="service-box reveal">
+          <img src="logo4.png" alt="">
+          <h3>Training & Awareness Programs</h3>
+          <ul>
+            <li>Cyber awareness workshops</li>
+            <li>Digital investigation training</li>
+            <li>Corporate cybersecurity training</li>
+            <li>Phishing simulation programs</li>
+            <li>Student internship programs</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="clients">
+    <div style="text-align: center;">
+      <span class="section-label reveal">Our Clients</span>
+      <h1 class="section-title reveal">What Our Clients Say</h1>
+      <p class="clients-intro reveal">
+        At CreateNex, we are proud to work with clients who trust us to strengthen their digital presence, safeguard their data, and
+        empower their growth. Our clients include business, startups, educational institutions, and government agencies who rely on our
+        innovative and security-focused solutions. Whether it's building custom software, conducting cyber - awareness programs, or 
+        developing AI - powered tools, we partner closely with our clients to understand their challenges and deliver solutions that truly make impact.
+      </p>
+
+      <div class="client-row reveal"><img src="Our Client Page image.png" alt=""></div>
+      <div class="client-row reveal"><img src="Our client page image 2.png" alt=""></div>
+    </div>
+  </section>
+
+</body>
+</html>
