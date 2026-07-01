@@ -314,6 +314,34 @@
       color: #fff;
     }
 
+    .hero-btn-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.skillup-hero-btn {
+  padding: 16px 38px;
+  background: linear-gradient(45deg, var(--accent-purple), var(--accent-cyan));
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 700;
+  display: inline-block;
+  transition: 0.3s;
+}
+
+.skillup-hero-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(34, 211, 238, 0.3);
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .hero-btn-row { justify-content: center; }
+}
+
     @keyframes float {
       0%, 100% { transform: translateY(0); }
       50%      { transform: translateY(-20px); }
@@ -645,7 +673,10 @@
       <div class="tagline-container">
         <p class="tagline"><b>Smart solutions</b>, <b>seamless execution</b>, and technology that works for you — not the other way around.</p>
       </div>
-      <div class="btn-wrap"><a href="#about" class="btn-main">LEARN MORE</a></div>
+      <div class="hero-btn-row">
+		<div class="btn-wrap"><a href="#about" class="btn-main">LEARN MORE</a></div>
+		<a href="skillup-ai.html" class="skillup-hero-btn">SkillUp AI</a>
+		</div>
     </div>
     <div class="hero-visual reveal">
       <img src="logo0.png" alt="Hero Illustration">
