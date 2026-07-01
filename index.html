@@ -133,6 +133,28 @@
       color: var(--accent-cyan);
     }
 
+    /* --- SKILLUP AI HIGHLIGHT --- */
+.nav-links a.skillup-highlight,
+.side-drawer a.skillup-highlight {
+  background: linear-gradient(45deg, var(--accent-blue), var(--accent-cyan));
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.side-drawer a.skillup-highlight {
+  text-align: center;
+  border-bottom: none;
+}
+
+.nav-links a.skillup-highlight:hover,
+.side-drawer a.skillup-highlight:hover {
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 211, 238, 0.35);
+}
+
     /* --- HAMBURGER (CSS ONLY, TEXT ICON) --- */
     #menu-toggle {
       display: none;
@@ -595,6 +617,7 @@
     <a href="service1.html">Services</a>
     <a href="client.html">Clients</a>
     <a href="contact1.html">Contact</a>
+    <a href="skillup-ai.html" class="skillup-highlight">SkillUp AI</a>
   </nav>
 
   <header class="navbar">
@@ -608,6 +631,7 @@
         <li><a href="service1.html">Services</a></li>
         <li><a href="client.html">Clients</a></li>
         <li><a href="contact1.html">Contact</a></li>
+        <a href="skillup-ai.html" class="skillup-highlight">SkillUp AI</a>
       </ul>
     </nav>
 
